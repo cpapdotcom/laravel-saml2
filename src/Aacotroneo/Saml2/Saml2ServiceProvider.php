@@ -1,7 +1,8 @@
 <?php
 namespace Aacotroneo\Saml2;
 
-use OneLogin_Saml2_Auth;
+use OneLogin\Saml2\Auth;
+use OneLogin\Saml2\Utils;
 use URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,7 +32,7 @@ class Saml2ServiceProvider extends ServiceProvider
         ]);
 
         if (config('saml2_settings.proxyVars', false)) {
-            \OneLogin_Saml2_Utils::setProxyVars(true);
+            Utils::setProxyVars(true);
         }
     }
 
@@ -46,14 +47,14 @@ class Saml2ServiceProvider extends ServiceProvider
 
         $this->app->singleton('Aacotroneo\Saml2\Saml2Auth', function ($app) {
 
-            return new \Aacotroneo\Saml2\Saml2Auth($app['OneLogin_Saml2_Auth']);
+            return new \Aacotroneo\Saml2\Saml2Auth($app[Auth::class]);
         });
 
     }
 
     protected function registerOneLoginInContainer()
     {
-        $this->app->singleton('OneLogin_Saml2_Auth', function ($app) {
+        $this->app->singleton(Auth::class, function ($app) {
             $config = config('saml2_settings');
             if (empty($config['sp']['entityId'])) {
                 $config['sp']['entityId'] = URL::route('saml_metadata');
@@ -75,7 +76,7 @@ class Saml2ServiceProvider extends ServiceProvider
                 $config['idp']['x509cert'] = $this->extractCertFromFile($config['idp']['x509cert']);
             }
 
-            return new OneLogin_Saml2_Auth($config);
+            return new Auth($config);
         });
     }
 

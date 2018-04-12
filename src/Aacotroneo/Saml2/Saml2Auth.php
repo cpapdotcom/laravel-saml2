@@ -2,9 +2,8 @@
 
 namespace Aacotroneo\Saml2;
 
-use OneLogin_Saml2_Auth;
-use OneLogin_Saml2_Error;
-use OneLogin_Saml2_Utils;
+use OneLogin\Saml2\Auth;
+use OneLogin\Saml2\Error;
 use Aacotroneo\Saml2\Events\Saml2LogoutEvent;
 
 use Log;
@@ -14,13 +13,13 @@ class Saml2Auth
 {
 
     /**
-     * @var \OneLogin_Saml2_Auth
+     * @var \OneLogin\Saml2\Auth
      */
     protected $auth;
 
     protected $samlAssertion;
 
-    function __construct(OneLogin_Saml2_Auth $auth)
+    function __construct(Auth $auth)
     {
         $this->auth = $auth;
     }
@@ -82,7 +81,7 @@ class Saml2Auth
     function acs()
     {
 
-        /** @var $auth OneLogin_Saml2_Auth */
+        /** @var $auth \OneLogin\Saml2\Auth */
         $auth = $this->auth;
 
         $auth->processResponse();
@@ -141,14 +140,14 @@ class Saml2Auth
 
             throw new InvalidArgumentException(
                 'Invalid SP metadata: ' . implode(', ', $errors),
-                OneLogin_Saml2_Error::METADATA_SP_INVALID
+                Error::METADATA_SP_INVALID
             );
         }
     }
 
     /**
-     * Get the last error reason from \OneLogin_Saml2_Auth, useful for error debugging.
-     * @see \OneLogin_Saml2_Auth::getLastErrorReason()
+     * Get the last error reason from \OneLogin\Saml2\Auth, useful for error debugging.
+     * @see \OneLogin\Saml2\Auth::getLastErrorReason()
      * @return string
      */
     function getLastErrorReason() {
